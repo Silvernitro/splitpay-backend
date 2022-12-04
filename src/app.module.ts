@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 import { BillsModule } from './bills/bills.module';
 import { Bill } from './bills/entities/bill.entity';
 import { BillParticipant } from './bills/entities/billParticipant.entity';
+import { Claim } from './bills/entities/claim.entity';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { BillParticipant } from './bills/entities/billParticipant.entity';
       username: 'postgres',
       password: '1234',
       database: 'postgres',
-      entities: [Bill, BillParticipant],
+      entities: [Bill, BillParticipant, Claim],
       synchronize: true,
     }),
     BillsModule,

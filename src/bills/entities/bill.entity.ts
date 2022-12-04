@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 // import type to prevent circular dependency
 import type { BillParticipant } from './billParticipant.entity';
+import { Claim } from './claim.entity';
 
 export enum BillStatus {
   PENDING_CLAIMS = 'pending_claims',
@@ -24,6 +25,9 @@ export class Bill {
   })
   status: BillStatus;
 
-  @OneToMany('BillParticipant', 'bill_id')
+  @OneToMany('BillParticipant', 'bill')
   participants: BillParticipant[];
+
+  @OneToMany('Claim', 'bill')
+  claims: Claim[];
 }
