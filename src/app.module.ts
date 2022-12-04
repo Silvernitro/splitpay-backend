@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { BillsModule } from './bills/bills.module';
 import { Bill } from './bills/entities/bill.entity';
-import { BillParticipant } from './bills/entities/billParticipant.entity';
+import { BillParticipant } from './bills/entities/bill-participant.entity';
 import { Claim } from './bills/entities/claim.entity';
 
 @Module({
