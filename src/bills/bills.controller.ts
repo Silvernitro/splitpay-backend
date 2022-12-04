@@ -5,7 +5,9 @@ import {
   Post,
   Headers,
   NotFoundException,
+  Response,
 } from '@nestjs/common';
+import { Response as Res } from 'express';
 import { BillsService } from './bills.service';
 
 @Controller('bills')
@@ -18,8 +20,9 @@ export class BillsController {
   }
 
   @Post(':groupId')
-  async createBill(@Param('groupId') groupId: string) {
-    return this.billsService.createBill(groupId);
+  async createBill(@Param('groupId') groupId: string, @Response() res: Res) {
+    const createdBill = await this.billsService.createBill(groupId);
+    return res.set('Location', `/bills/${createdBill.id}`).json(createdBill);
   }
 
   @Get(':groupId')
