@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { BillsModule } from './bills/bills.module';
 import { Bill } from './bills/entities/bill.entity';
+import { BillParticipant } from './bills/entities/billParticipant.entity';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { Bill } from './bills/entities/bill.entity';
       username: 'postgres',
       password: '1234',
       database: 'postgres',
-      entities: [Bill],
+      entities: [Bill, BillParticipant],
       synchronize: true,
     }),
     BillsModule,

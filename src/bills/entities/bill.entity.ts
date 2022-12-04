@@ -1,6 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+// import type to prevent circular dependency
+import type { BillParticipant } from './billParticipant.entity';
 
-enum BillStatus {
+export enum BillStatus {
   PENDING_CLAIMS = 'pending_claims',
   PENDING_PAYMENTS = 'pending_payments',
   PAYMENTS_FINALIZED = 'payments_finalized',
@@ -13,7 +15,7 @@ export class Bill {
   id: string;
 
   @Column()
-  telegram_group_id: string;
+  telegramGroupId: string;
 
   @Column({
     type: 'enum',
@@ -21,4 +23,7 @@ export class Bill {
     default: BillStatus.PENDING_CLAIMS,
   })
   status: BillStatus;
+
+  @OneToMany('BillParticipant', 'bill_id')
+  participants: BillParticipant[];
 }
