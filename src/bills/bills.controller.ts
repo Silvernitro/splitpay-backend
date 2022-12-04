@@ -6,9 +6,11 @@ import {
   Headers,
   NotFoundException,
   Response,
+  Body,
 } from '@nestjs/common';
 import { Response as Res } from 'express';
 import { BillsService } from './bills.service';
+import createClaimDto from './dto/create-claim.dto';
 
 @Controller('bills')
 export class BillsController {
@@ -37,5 +39,20 @@ export class BillsController {
 
     await this.billsService.createBillParticipant(bill, userId);
     return bill;
+  }
+
+  @Post(':billId/claims')
+  async createClaim(
+    @Param('billId') billId: string,
+    @Headers('userId') userId: string,
+    @Body() claimDto: createClaimDto,
+  ) {
+    const billParticipant = await this.billsService.getBillParticipant(
+      billId,
+      userId,
+    );
+    const bill = billParticipant.bill;
+
+    return this.billsService.createClaim(bill, billParticipant, claimDto);
   }
 }

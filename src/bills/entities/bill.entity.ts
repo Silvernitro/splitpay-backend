@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-// import type to prevent circular dependency
-import type { BillParticipant } from './billParticipant.entity';
-import { Claim } from './claim.entity';
+// import types to prevent circular dependency
+import type { BillParticipant } from './bill-participant.entity';
+import type { Claim } from './claim.entity';
 
 export enum BillStatus {
   PENDING_CLAIMS = 'pending_claims',
