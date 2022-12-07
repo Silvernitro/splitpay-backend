@@ -8,11 +8,13 @@ import {
   Response,
   Body,
   Put,
+  Patch,
 } from '@nestjs/common';
 import { Response as Res } from 'express';
 import { BillsService } from './bills.service';
 import createClaimDto from './dto/create-claim.dto';
 import claimConfirmationDto from './dto/claim-confirmation.dto';
+import billParticipantsConfirmationDto from './dto/bill-participants-confirmation.dto';
 
 @Controller('bills')
 export class BillsController {
@@ -47,6 +49,19 @@ export class BillsController {
     return 'Bill participant successfully created';
   }
 
+  @Patch(':billId/confirmParticipants')
+  async setBillParticipantConfirmation(
+    @Param('billId') billId: string,
+    @Body() confirmationDto: billParticipantsConfirmationDto,
+  ) {
+    await this.billsService.setBillParticipantsConfirmation(
+      billId,
+      confirmationDto.participantsConfirmed,
+    );
+
+    return 'Bill status succesfully updated.';
+  }
+
   @Post(':billId/claims')
   async createClaim(
     @Param('billId') billId: string,
@@ -62,7 +77,7 @@ export class BillsController {
     return this.billsService.createClaim(bill, billParticipant, claimDto);
   }
 
-  @Put(':billId/participants/claimConfirmation')
+  @Patch(':billId/participants/confirmClaims')
   async setClaimConfirmation(
     @Param('billId') billId: string,
     @Headers('userId') userId: string,

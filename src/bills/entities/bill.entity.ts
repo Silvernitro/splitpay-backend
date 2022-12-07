@@ -3,7 +3,10 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import type { BillParticipant } from './bill-participant.entity';
 import type { Claim } from './claim.entity';
 
+// definitely wished TS supported enum inheritance...
+// most fields here are the same as BillParticipantStatus
 export enum BillStatus {
+  PENDING_PARTICIPANTS = 'pending_participants',
   PENDING_CLAIMS = 'pending_claims',
   PENDING_PAYMENTS = 'pending_payments',
   PAYMENTS_FINALIZED = 'payments_finalized',
@@ -21,7 +24,7 @@ export class Bill {
   @Column({
     type: 'enum',
     enum: BillStatus,
-    default: BillStatus.PENDING_CLAIMS,
+    default: BillStatus.PENDING_PARTICIPANTS,
   })
   status: BillStatus;
 

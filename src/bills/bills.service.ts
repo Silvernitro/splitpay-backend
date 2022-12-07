@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Bill, BillStatus } from './entities/bill.entity';
-import { BillParticipant } from './entities/bill-participant.entity';
+import {
+  BillParticipant,
+  BillParticipantStatus,
+} from './entities/bill-participant.entity';
 import createClaimDto from './dto/create-claim.dto';
 import { Claim } from './entities/claim.entity';
 
@@ -31,6 +34,17 @@ export class BillsService {
     });
   }
 
+  async setBillParticipantsConfirmation(billId: string, isConfirmed: boolean) {
+    return this.billRepository.update(
+      { id: billId },
+      {
+        status: isConfirmed
+          ? BillStatus.PENDING_CLAIMS
+          : BillStatus.PENDING_PARTICIPANTS,
+      },
+    );
+  }
+
   private async updateBillStatus(entityManager: EntityManager, billId: string) {
     const bill = await entityManager.findOne(Bill, {
       relations: { participants: true },
@@ -40,15 +54,19 @@ export class BillsService {
       return null;
     }
 
-    const areAllParticipantStatuses = (status: BillStatus) =>
+    const areAllParticipantStatuses = (status: BillParticipantStatus) =>
       bill.participants.every((p: BillParticipant) => p.status === status);
 
     let newStatus: BillStatus = BillStatus.PENDING_CLAIMS;
-    if (areAllParticipantStatuses(BillStatus.PENDING_PAYMENTS)) {
+    if (areAllParticipantStatuses(BillParticipantStatus.PENDING_PAYMENTS)) {
       newStatus = BillStatus.PENDING_PAYMENTS;
-    } else if (areAllParticipantStatuses(BillStatus.PAYMENTS_FINALIZED)) {
+    } else if (
+      areAllParticipantStatuses(BillParticipantStatus.PAYMENTS_FINALIZED)
+    ) {
       newStatus = BillStatus.PAYMENTS_FINALIZED;
-    } else if (areAllParticipantStatuses(BillStatus.PAYMENTS_SETTLED)) {
+    } else if (
+      areAllParticipantStatuses(BillParticipantStatus.PAYMENTS_SETTLED)
+    ) {
       newStatus = BillStatus.PAYMENTS_SETTLED;
     }
 
@@ -89,8 +107,8 @@ export class BillsService {
         {
           // todo: refactor to use a util class that can tell us prev and next states
           status: isConfirmed
-            ? BillStatus.PENDING_PAYMENTS
-            : BillStatus.PENDING_CLAIMS,
+            ? BillParticipantStatus.PENDING_PAYMENTS
+            : BillParticipantStatus.PENDING_CLAIMS,
         },
       );
       await this.updateBillStatus(queryRunner.manager, billId);

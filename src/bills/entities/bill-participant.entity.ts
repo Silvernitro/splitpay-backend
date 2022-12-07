@@ -5,7 +5,14 @@ import {
   ManyToOne,
   Unique,
 } from 'typeorm';
-import { Bill, BillStatus } from './bill.entity';
+import { Bill } from './bill.entity';
+
+export enum BillParticipantStatus {
+  PENDING_CLAIMS = 'pending_claims',
+  PENDING_PAYMENTS = 'pending_payments',
+  PAYMENTS_FINALIZED = 'payments_finalized',
+  PAYMENTS_SETTLED = 'payments_settled',
+}
 
 @Entity()
 @Unique(['telegramUserId', 'bill'])
@@ -25,8 +32,8 @@ export class BillParticipant {
 
   @Column({
     type: 'enum',
-    enum: BillStatus,
-    default: BillStatus.PENDING_CLAIMS,
+    enum: BillParticipantStatus,
+    default: BillParticipantStatus.PENDING_CLAIMS,
   })
-  status: BillStatus;
+  status: BillParticipantStatus;
 }
