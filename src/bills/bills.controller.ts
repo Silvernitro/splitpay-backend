@@ -7,7 +7,6 @@ import {
   NotFoundException,
   Response,
   Body,
-  Put,
   Patch,
 } from '@nestjs/common';
 import { Response as Res } from 'express';
@@ -15,11 +14,13 @@ import { BillsService } from './bills.service';
 import createClaimDto from './dto/create-claim.dto';
 import claimConfirmationDto from './dto/claim-confirmation.dto';
 import billParticipantsConfirmationDto from './dto/bill-participants-confirmation.dto';
+import createPaymentDto from './dto/create-payment.dto';
 
 @Controller('bills')
 export class BillsController {
   constructor(private billsService: BillsService) {}
 
+  // ------------- BILLS ----------- //
   @Get()
   async getAllBills() {
     return 'Hello world';
@@ -40,6 +41,7 @@ export class BillsController {
     return bill;
   }
 
+  // ------------- BILL PARTICIPANTS ----------- //
   @Post(':billId/participants/:userId')
   async addBillParticipant(
     @Param('billId') billId: string,
@@ -62,6 +64,7 @@ export class BillsController {
     return 'Bill status succesfully updated.';
   }
 
+  // ------------- CLAIMS ----------- //
   @Post(':billId/claims')
   async createClaim(
     @Param('billId') billId: string,
@@ -90,5 +93,15 @@ export class BillsController {
     );
 
     return 'Bill participant status succesfully updated.';
+  }
+
+  // ------------- PAYMENTS ----------- //
+  @Post(':billId/payments')
+  async createPayment(
+    @Param('billId') billId: string,
+    @Headers('userId') userId: string,
+    @Body() paymentDto: createPaymentDto,
+  ) {
+    return this.billsService.createPayment(billId, userId, paymentDto.claimId);
   }
 }

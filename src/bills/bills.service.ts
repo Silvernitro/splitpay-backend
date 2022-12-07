@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Bill, BillStatus } from './entities/bill.entity';
@@ -8,6 +8,7 @@ import {
 } from './entities/bill-participant.entity';
 import createClaimDto from './dto/create-claim.dto';
 import { Claim } from './entities/claim.entity';
+import { Payment } from './entities/payment.entity.';
 
 @Injectable()
 export class BillsService {
@@ -19,6 +20,8 @@ export class BillsService {
     private billParticipantRepository: Repository<BillParticipant>,
     @InjectRepository(Claim)
     private claimRepository: Repository<Claim>,
+    @InjectRepository(Payment)
+    private paymentRepository: Repository<Payment>,
   ) {}
 
   async createBill(telegramGroupId: string) {
@@ -134,5 +137,19 @@ export class BillsService {
     claim.price = claimDto.price;
 
     return this.claimRepository.save(claim);
+  }
+
+  async createPayment(billId: string, telegramUserId: string, claimId: string) {
+    const payer = await this.getBillParticipant(billId, telegramUserId);
+    if (!payer) {
+      throw new BadRequestException("User doesn't exist in the given bill.");
+    }
+
+    const payment = new Payment();
+    payment.billId = billId;
+    payment.payerId = payer.id;
+    payment.claimId = claimId;
+
+    return this.paymentRepository.save(payment);
   }
 }

@@ -5,6 +5,7 @@ import { BillsModule } from './bills/bills.module';
 import { Bill } from './bills/entities/bill.entity';
 import { BillParticipant } from './bills/entities/bill-participant.entity';
 import { Claim } from './bills/entities/claim.entity';
+import { Payment } from './bills/entities/payment.entity.';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { Claim } from './bills/entities/claim.entity';
       username: 'postgres',
       password: '1234',
       database: 'postgres',
-      entities: [Bill, BillParticipant, Claim],
+      entities: [Bill, BillParticipant, Claim, Payment],
       synchronize: true,
     }),
     BillsModule,

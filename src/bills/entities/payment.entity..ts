@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
 import { BillParticipant } from './bill-participant.entity';
 import { Bill } from './bill.entity';
 import { Claim } from './claim.entity';
@@ -11,9 +11,18 @@ export class Payment {
   @ManyToOne('BillParticipant')
   payer: BillParticipant;
 
+  @Column()
+  payerId: string;
+
   @ManyToOne('Claim')
   claim: Claim;
 
+  @Column()
+  claimId: string;
+
   @ManyToOne('Bill', 'payments')
   bill: Bill;
+
+  @Column()
+  billId: string;
 }
