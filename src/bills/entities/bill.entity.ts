@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 // import types to prevent circular dependency
 import type { BillParticipant } from './bill-participant.entity';
 import type { Claim } from './claim.entity';
+import { Payment } from './payment.entity.';
 
 // definitely wished TS supported enum inheritance...
 // most fields here are the same as BillParticipantStatus
@@ -33,4 +34,7 @@ export class Bill {
 
   @OneToMany('Claim', 'bill')
   claims: Claim[];
+
+  @OneToMany('Payment', 'bill')
+  payments: Payment[];
 }
