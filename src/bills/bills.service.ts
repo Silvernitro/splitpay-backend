@@ -55,13 +55,13 @@ export class BillsService {
     return entityManager.update(Bill, { id: billId }, { status: newStatus });
   }
 
-  async createBillParticipant(bill: Bill, telegramUserId: string) {
+  async createBillParticipant(billId: string, telegramUserId: string) {
     const billParticipant = new BillParticipant();
     billParticipant.telegramUserId = telegramUserId;
-    billParticipant.bill = bill;
+    billParticipant.billId = billId;
 
     return this.billParticipantRepository.upsert(billParticipant, {
-      conflictPaths: ['telegramUserId', 'bill'],
+      conflictPaths: ['telegramUserId', 'billId'],
       skipUpdateIfNoValuesChanged: true,
     });
   }

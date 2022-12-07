@@ -30,19 +30,21 @@ export class BillsController {
   }
 
   @Get(':groupId')
-  async getBill(
-    @Param('groupId') groupId: string,
-    @Headers('userId') userId: string,
-  ) {
+  async getBill(@Param('groupId') groupId: string) {
     const bill = await this.billsService.getBill(groupId);
     if (!bill) {
       throw new NotFoundException('No open bill found for telegram group.');
     }
-
-    // wrong logic. what if only 1 guy opens the web app and is done submitting
-    // claims? then the app will only have 1 participant and move on to next state
-    await this.billsService.createBillParticipant(bill, userId);
     return bill;
+  }
+
+  @Post(':billId/participants/:userId')
+  async addBillParticipant(
+    @Param('billId') billId: string,
+    @Param('userId') telegramUserId: string,
+  ) {
+    await this.billsService.createBillParticipant(billId, telegramUserId);
+    return 'Bill participant successfully created';
   }
 
   @Post(':billId/claims')
@@ -66,10 +68,12 @@ export class BillsController {
     @Headers('userId') userId: string,
     @Body() confirmationDto: claimConfirmationDto,
   ) {
-    return this.billsService.setBillParticipantClaimConfirmation(
+    await this.billsService.setBillParticipantClaimConfirmation(
       billId,
       userId,
       confirmationDto.claimsConfirmed,
     );
+
+    return 'Bill participant status succesfully updated.';
   }
 }

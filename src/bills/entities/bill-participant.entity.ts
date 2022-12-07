@@ -19,6 +19,10 @@ export class BillParticipant {
   @ManyToOne('Bill', 'participants')
   bill: Bill;
 
+  // companion field for the actual bill navigation field
+  @Column()
+  billId: string;
+
   @Column({
     type: 'enum',
     enum: BillStatus,
