@@ -7,10 +7,12 @@ import {
   NotFoundException,
   Response,
   Body,
+  Put,
 } from '@nestjs/common';
 import { Response as Res } from 'express';
 import { BillsService } from './bills.service';
 import createClaimDto from './dto/create-claim.dto';
+import claimConfirmationDto from './dto/claim-confirmation.dto';
 
 @Controller('bills')
 export class BillsController {
@@ -37,6 +39,8 @@ export class BillsController {
       throw new NotFoundException('No open bill found for telegram group.');
     }
 
+    // wrong logic. what if only 1 guy opens the web app and is done submitting
+    // claims? then the app will only have 1 participant and move on to next state
     await this.billsService.createBillParticipant(bill, userId);
     return bill;
   }
@@ -54,5 +58,18 @@ export class BillsController {
     const bill = billParticipant.bill;
 
     return this.billsService.createClaim(bill, billParticipant, claimDto);
+  }
+
+  @Put(':billId/participants/claimConfirmation')
+  async setClaimConfirmation(
+    @Param('billId') billId: string,
+    @Headers('userId') userId: string,
+    @Body() confirmationDto: claimConfirmationDto,
+  ) {
+    return this.billsService.setBillParticipantClaimConfirmation(
+      billId,
+      userId,
+      confirmationDto.claimsConfirmed,
+    );
   }
 }
