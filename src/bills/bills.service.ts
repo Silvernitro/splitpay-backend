@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Bill, BillStatus } from './entities/bill.entity';
@@ -7,7 +7,7 @@ import {
   BillParticipantStatus,
 } from '../bill-participants/entities/bill-participant.entity';
 import { Claim } from '../claims/entities/claim.entity';
-import { Payment } from './entities/payment.entity.';
+import { Payment } from '../payments/entities/payment.entity';
 
 @Injectable()
 export class BillsService {
@@ -119,20 +119,6 @@ export class BillsService {
     } finally {
       await queryRunner.release();
     }
-  }
-
-  async createPayment(billId: string, telegramUserId: string, claimId: string) {
-    const payer = await this.getBillParticipant(billId, telegramUserId);
-    if (!payer) {
-      throw new BadRequestException("User doesn't exist in the given bill.");
-    }
-
-    const payment = new Payment();
-    payment.billId = billId;
-    payment.payerId = payer.id;
-    payment.claimId = claimId;
-
-    return this.paymentRepository.save(payment);
   }
 
   async setBillParticipantPaymentConfirmation(

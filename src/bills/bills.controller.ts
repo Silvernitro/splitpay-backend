@@ -13,7 +13,6 @@ import { Response as Res } from 'express';
 import { BillsService } from './bills.service';
 import claimConfirmationDto from './dto/claim-confirmation.dto';
 import billParticipantsConfirmationDto from './dto/bill-participants-confirmation.dto';
-import createPaymentDto from './dto/create-payment.dto';
 import paymentConfirmationDto from './dto/payment-confirmation.dto';
 
 @Controller()
@@ -70,15 +69,6 @@ export class BillsController {
   }
 
   // ------------- PAYMENTS ----------- //
-  @Post(':billId/payments')
-  async createPayment(
-    @Param('billId') billId: string,
-    @Headers('userId') userId: string,
-    @Body() paymentDto: createPaymentDto,
-  ) {
-    return this.billsService.createPayment(billId, userId, paymentDto.claimId);
-  }
-
   @Patch(':billId/participants/confirmPayments')
   async setPaymentConfirmation(
     @Param('billId') billId: string,
