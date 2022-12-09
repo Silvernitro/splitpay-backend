@@ -17,7 +17,7 @@ import billParticipantsConfirmationDto from './dto/bill-participants-confirmatio
 import createPaymentDto from './dto/create-payment.dto';
 import paymentConfirmationDto from './dto/payment-confirmation.dto';
 
-@Controller('bills')
+@Controller()
 export class BillsController {
   constructor(private billsService: BillsService) {}
 
@@ -40,16 +40,6 @@ export class BillsController {
       throw new NotFoundException('No open bill found for telegram group.');
     }
     return bill;
-  }
-
-  // ------------- BILL PARTICIPANTS ----------- //
-  @Post(':billId/participants/:userId')
-  async addBillParticipant(
-    @Param('billId') billId: string,
-    @Param('userId') telegramUserId: string,
-  ) {
-    await this.billsService.createBillParticipant(billId, telegramUserId);
-    return 'Bill participant successfully created';
   }
 
   @Patch(':billId/confirmParticipants')

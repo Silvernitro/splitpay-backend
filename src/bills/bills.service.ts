@@ -5,7 +5,7 @@ import { Bill, BillStatus } from './entities/bill.entity';
 import {
   BillParticipant,
   BillParticipantStatus,
-} from './entities/bill-participant.entity';
+} from '../bill-participants/entities/bill-participant.entity';
 import createClaimDto from './dto/create-claim.dto';
 import { Claim } from './entities/claim.entity';
 import { Payment } from './entities/payment.entity.';
@@ -74,17 +74,6 @@ export class BillsService {
     }
 
     return entityManager.update(Bill, { id: billId }, { status: newStatus });
-  }
-
-  async createBillParticipant(billId: string, telegramUserId: string) {
-    const billParticipant = new BillParticipant();
-    billParticipant.telegramUserId = telegramUserId;
-    billParticipant.billId = billId;
-
-    return this.billParticipantRepository.upsert(billParticipant, {
-      conflictPaths: ['telegramUserId', 'billId'],
-      skipUpdateIfNoValuesChanged: true,
-    });
   }
 
   async getBillParticipant(billId: string, telegramUserId: string) {

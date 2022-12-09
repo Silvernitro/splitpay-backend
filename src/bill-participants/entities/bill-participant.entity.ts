@@ -5,7 +5,7 @@ import {
   ManyToOne,
   Unique,
 } from 'typeorm';
-import { Bill } from './bill.entity';
+import { Bill } from '../../bills/entities/bill.entity';
 
 export enum BillParticipantStatus {
   PENDING_CLAIMS = 'pending_claims',

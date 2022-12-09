@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
-import { BillParticipant } from './bill-participant.entity';
+import { BillParticipant } from '../../bill-participants/entities/bill-participant.entity';
 import { Bill } from './bill.entity';
 import { Claim } from './claim.entity';
 

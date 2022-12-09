@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 // import types to prevent circular dependency
-import type { BillParticipant } from './bill-participant.entity';
+import type { BillParticipant } from '../../bill-participants/entities/bill-participant.entity';
 import type { Claim } from './claim.entity';
 import { Payment } from './payment.entity.';
 
