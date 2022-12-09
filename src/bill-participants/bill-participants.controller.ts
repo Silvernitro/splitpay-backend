@@ -1,4 +1,4 @@
-import { Headers, Controller, Param, Patch, Post, Body } from '@nestjs/common';
+import { Controller, Param, Post, Body } from '@nestjs/common';
 import { BillParticipantsService } from './bill-participants.service';
 import claimConfirmationDto from './dto/claim-confirmation.dto';
 import paymentConfirmationDto from './dto/payment-confirmation.dto';
@@ -21,10 +21,10 @@ export class BillParticipantsController {
     return 'Bill participant successfully created';
   }
 
-  @Patch('confirmClaims')
+  @Post(':userId/confirmClaims')
   async setClaimConfirmation(
     @Param('billId') billId: string,
-    @Headers('userId') userId: string,
+    @Param('userId') userId: string,
     @Body() confirmationDto: claimConfirmationDto,
   ) {
     await this.billParticipantsService.setBillParticipantClaimConfirmation(
@@ -36,10 +36,10 @@ export class BillParticipantsController {
     return 'Bill participant status succesfully updated.';
   }
 
-  @Patch('confirmPayments')
+  @Post(':userId/confirmPayments')
   async setPaymentConfirmation(
     @Param('billId') billId: string,
-    @Headers('userId') userId: string,
+    @Param('userId') userId: string,
     @Body() confirmationDto: paymentConfirmationDto,
   ) {
     await this.billParticipantsService.setBillParticipantPaymentConfirmation(
