@@ -6,8 +6,7 @@ import {
   BillParticipant,
   BillParticipantStatus,
 } from '../bill-participants/entities/bill-participant.entity';
-import createClaimDto from './dto/create-claim.dto';
-import { Claim } from './entities/claim.entity';
+import { Claim } from '../claims/entities/claim.entity';
 import { Payment } from './entities/payment.entity.';
 
 @Injectable()
@@ -120,20 +119,6 @@ export class BillsService {
     } finally {
       await queryRunner.release();
     }
-  }
-
-  async createClaim(
-    bill: Bill,
-    billParticipant: BillParticipant,
-    claimDto: createClaimDto,
-  ) {
-    const claim = new Claim();
-    claim.bill = bill;
-    claim.claimant = billParticipant;
-    claim.itemName = claimDto.itemName;
-    claim.price = claimDto.price;
-
-    return this.claimRepository.save(claim);
   }
 
   async createPayment(billId: string, telegramUserId: string, claimId: string) {

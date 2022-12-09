@@ -4,7 +4,7 @@ import { BillsController } from './bills.controller';
 import { BillsService } from './bills.service';
 import { Bill } from './entities/bill.entity';
 import { BillParticipant } from '../bill-participants/entities/bill-participant.entity';
-import { Claim } from './entities/claim.entity';
+import { Claim } from '../claims/entities/claim.entity';
 import { Payment } from './entities/payment.entity.';
 
 @Module({

@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { BillParticipant } from '../../bill-participants/entities/bill-participant.entity';
-import { Bill } from './bill.entity';
+import { Bill } from '../../bills/entities/bill.entity';
 
 @Entity()
 export class Claim {
@@ -18,4 +18,7 @@ export class Claim {
 
   @ManyToOne('Bill', 'claims')
   bill: Bill;
+
+  @Column()
+  billId: string;
 }

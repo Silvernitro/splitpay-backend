@@ -20,4 +20,11 @@ export class BillParticipantsService {
       skipUpdateIfNoValuesChanged: true,
     });
   }
+
+  async getBillParticipant(billId: string, telegramUserId: string) {
+    return this.billParticipantRepository.findOne({
+      relations: { bill: true },
+      where: { bill: { id: billId }, telegramUserId },
+    });
+  }
 }

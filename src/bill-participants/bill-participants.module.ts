@@ -8,5 +8,6 @@ import { BillParticipant } from 'src/bill-participants/entities/bill-participant
   imports: [TypeOrmModule.forFeature([BillParticipant])],
   controllers: [BillParticipantsController],
   providers: [BillParticipantsService],
+  exports: [BillParticipantsService],
 })
 export class BillParticipantsModule {}

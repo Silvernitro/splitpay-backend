@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 // import types to prevent circular dependency
 import type { BillParticipant } from '../../bill-participants/entities/bill-participant.entity';
-import type { Claim } from './claim.entity';
+import type { Claim } from '../../claims/entities/claim.entity';
 import { Payment } from './payment.entity.';
 
 // definitely wished TS supported enum inheritance...

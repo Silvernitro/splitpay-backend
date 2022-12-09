@@ -5,10 +5,11 @@ import { DataSource } from 'typeorm';
 
 import { BillsModule } from './bills/bills.module';
 import { BillParticipantsModule } from './bill-participants/bill-participants.module';
+import { ClaimsModule } from './claims/claims.module';
 
 import { Bill } from './bills/entities/bill.entity';
 import { BillParticipant } from './bill-participants/entities/bill-participant.entity';
-import { Claim } from './bills/entities/claim.entity';
+import { Claim } from './claims/entities/claim.entity';
 import { Payment } from './bills/entities/payment.entity.';
 
 @Module({
@@ -25,6 +26,7 @@ import { Payment } from './bills/entities/payment.entity.';
     }),
     BillsModule,
     BillParticipantsModule,
+    ClaimsModule,
     RouterModule.register([
       {
         path: 'bills',
@@ -33,6 +35,10 @@ import { Payment } from './bills/entities/payment.entity.';
           {
             path: ':billId/participants',
             module: BillParticipantsModule,
+          },
+          {
+            path: ':billId/claims',
+            module: ClaimsModule,
           },
         ],
       },

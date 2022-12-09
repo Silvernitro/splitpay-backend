@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { Response as Res } from 'express';
 import { BillsService } from './bills.service';
-import createClaimDto from './dto/create-claim.dto';
 import claimConfirmationDto from './dto/claim-confirmation.dto';
 import billParticipantsConfirmationDto from './dto/bill-participants-confirmation.dto';
 import createPaymentDto from './dto/create-payment.dto';
@@ -53,22 +52,6 @@ export class BillsController {
     );
 
     return 'Bill status succesfully updated.';
-  }
-
-  // ------------- CLAIMS ----------- //
-  @Post(':billId/claims')
-  async createClaim(
-    @Param('billId') billId: string,
-    @Headers('userId') userId: string,
-    @Body() claimDto: createClaimDto,
-  ) {
-    const billParticipant = await this.billsService.getBillParticipant(
-      billId,
-      userId,
-    );
-    const bill = billParticipant.bill;
-
-    return this.billsService.createClaim(bill, billParticipant, claimDto);
   }
 
   @Patch(':billId/participants/confirmClaims')
