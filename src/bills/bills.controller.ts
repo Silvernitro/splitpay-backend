@@ -3,7 +3,6 @@ import {
   Get,
   Param,
   Post,
-  Headers,
   NotFoundException,
   Response,
   Body,
@@ -11,19 +10,11 @@ import {
 } from '@nestjs/common';
 import { Response as Res } from 'express';
 import { BillsService } from './bills.service';
-import claimConfirmationDto from './dto/claim-confirmation.dto';
 import billParticipantsConfirmationDto from './dto/bill-participants-confirmation.dto';
-import paymentConfirmationDto from './dto/payment-confirmation.dto';
 
 @Controller()
 export class BillsController {
   constructor(private billsService: BillsService) {}
-
-  // ------------- BILLS ----------- //
-  @Get()
-  async getAllBills() {
-    return 'Hello world';
-  }
 
   @Post(':groupId')
   async createBill(@Param('groupId') groupId: string, @Response() res: Res) {
@@ -51,36 +42,5 @@ export class BillsController {
     );
 
     return 'Bill status succesfully updated.';
-  }
-
-  @Patch(':billId/participants/confirmClaims')
-  async setClaimConfirmation(
-    @Param('billId') billId: string,
-    @Headers('userId') userId: string,
-    @Body() confirmationDto: claimConfirmationDto,
-  ) {
-    await this.billsService.setBillParticipantClaimConfirmation(
-      billId,
-      userId,
-      confirmationDto.claimsConfirmed,
-    );
-
-    return 'Bill participant status succesfully updated.';
-  }
-
-  // ------------- PAYMENTS ----------- //
-  @Patch(':billId/participants/confirmPayments')
-  async setPaymentConfirmation(
-    @Param('billId') billId: string,
-    @Headers('userId') userId: string,
-    @Body() confirmationDto: paymentConfirmationDto,
-  ) {
-    await this.billsService.setBillParticipantPaymentConfirmation(
-      billId,
-      userId,
-      confirmationDto.paymentsConfirmed,
-    );
-
-    return 'Bill participant status succesfully updated.';
   }
 }

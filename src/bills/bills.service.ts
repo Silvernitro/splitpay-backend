@@ -1,26 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, EntityManager, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { Bill, BillStatus } from './entities/bill.entity';
 import {
   BillParticipant,
   BillParticipantStatus,
 } from '../bill-participants/entities/bill-participant.entity';
-import { Claim } from '../claims/entities/claim.entity';
-import { Payment } from '../payments/entities/payment.entity';
 
 @Injectable()
 export class BillsService {
   constructor(
-    private dataSource: DataSource,
     @InjectRepository(Bill)
     private billRepository: Repository<Bill>,
-    @InjectRepository(BillParticipant)
-    private billParticipantRepository: Repository<BillParticipant>,
-    @InjectRepository(Claim)
-    private claimRepository: Repository<Claim>,
-    @InjectRepository(Payment)
-    private paymentRepository: Repository<Payment>,
   ) {}
 
   async createBill(telegramGroupId: string) {
@@ -47,7 +38,8 @@ export class BillsService {
     );
   }
 
-  private async updateBillStatus(entityManager: EntityManager, billId: string) {
+  // used in a transaction, therefore an EntityManager should be passed in
+  async updateBillStatus(entityManager: EntityManager, billId: string) {
     const bill = await entityManager.findOne(Bill, {
       relations: { participants: true },
       where: { id: billId },
@@ -73,62 +65,5 @@ export class BillsService {
     }
 
     return entityManager.update(Bill, { id: billId }, { status: newStatus });
-  }
-
-  async getBillParticipant(billId: string, telegramUserId: string) {
-    return this.billParticipantRepository.findOne({
-      relations: { bill: true },
-      where: { bill: { id: billId }, telegramUserId },
-    });
-  }
-
-  async setBillParticipantClaimConfirmation(
-    billId: string,
-    telegramUserId: string,
-    isConfirmed: boolean,
-  ) {
-    const status = isConfirmed
-      ? BillParticipantStatus.PENDING_PAYMENTS
-      : BillParticipantStatus.PENDING_CLAIMS;
-    return this.setBillParticipantStatus(billId, telegramUserId, status);
-  }
-
-  async setBillParticipantStatus(
-    billId: string,
-    telegramUserId: string,
-    status: BillParticipantStatus,
-  ) {
-    const queryRunner = this.dataSource.createQueryRunner();
-
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      await queryRunner.manager.update(
-        BillParticipant,
-        { bill: { id: billId }, telegramUserId },
-        {
-          status,
-        },
-      );
-      await this.updateBillStatus(queryRunner.manager, billId);
-
-      await queryRunner.commitTransaction();
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw err;
-    } finally {
-      await queryRunner.release();
-    }
-  }
-
-  async setBillParticipantPaymentConfirmation(
-    billId: string,
-    telegramUserId: string,
-    isConfirmed: boolean,
-  ) {
-    const status = isConfirmed
-      ? BillParticipantStatus.PAYMENTS_FINALIZED
-      : BillParticipantStatus.PENDING_PAYMENTS;
-    return this.setBillParticipantStatus(billId, telegramUserId, status);
   }
 }
