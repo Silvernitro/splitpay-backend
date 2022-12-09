@@ -57,18 +57,18 @@ export class BillsService {
       return null;
     }
 
-    const areAllParticipantStatuses = (status: BillParticipantStatus) =>
+    const checkParticipantStatuses = (status: BillParticipantStatus) =>
       bill.participants.every((p: BillParticipant) => p.status === status);
 
     let newStatus: BillStatus = BillStatus.PENDING_CLAIMS;
-    if (areAllParticipantStatuses(BillParticipantStatus.PENDING_PAYMENTS)) {
+    if (checkParticipantStatuses(BillParticipantStatus.PENDING_PAYMENTS)) {
       newStatus = BillStatus.PENDING_PAYMENTS;
     } else if (
-      areAllParticipantStatuses(BillParticipantStatus.PAYMENTS_FINALIZED)
+      checkParticipantStatuses(BillParticipantStatus.PAYMENTS_FINALIZED)
     ) {
       newStatus = BillStatus.PAYMENTS_FINALIZED;
     } else if (
-      areAllParticipantStatuses(BillParticipantStatus.PAYMENTS_SETTLED)
+      checkParticipantStatuses(BillParticipantStatus.PAYMENTS_SETTLED)
     ) {
       newStatus = BillStatus.PAYMENTS_SETTLED;
     }
@@ -99,6 +99,17 @@ export class BillsService {
     telegramUserId: string,
     isConfirmed: boolean,
   ) {
+    const status = isConfirmed
+      ? BillParticipantStatus.PENDING_PAYMENTS
+      : BillParticipantStatus.PENDING_CLAIMS;
+    return this.setBillParticipantStatus(billId, telegramUserId, status);
+  }
+
+  async setBillParticipantStatus(
+    billId: string,
+    telegramUserId: string,
+    status: BillParticipantStatus,
+  ) {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
@@ -108,10 +119,7 @@ export class BillsService {
         BillParticipant,
         { bill: { id: billId }, telegramUserId },
         {
-          // todo: refactor to use a util class that can tell us prev and next states
-          status: isConfirmed
-            ? BillParticipantStatus.PENDING_PAYMENTS
-            : BillParticipantStatus.PENDING_CLAIMS,
+          status,
         },
       );
       await this.updateBillStatus(queryRunner.manager, billId);
@@ -151,5 +159,16 @@ export class BillsService {
     payment.claimId = claimId;
 
     return this.paymentRepository.save(payment);
+  }
+
+  async setBillParticipantPaymentConfirmation(
+    billId: string,
+    telegramUserId: string,
+    isConfirmed: boolean,
+  ) {
+    const status = isConfirmed
+      ? BillParticipantStatus.PAYMENTS_FINALIZED
+      : BillParticipantStatus.PENDING_PAYMENTS;
+    return this.setBillParticipantStatus(billId, telegramUserId, status);
   }
 }

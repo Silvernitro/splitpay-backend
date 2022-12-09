@@ -15,6 +15,7 @@ import createClaimDto from './dto/create-claim.dto';
 import claimConfirmationDto from './dto/claim-confirmation.dto';
 import billParticipantsConfirmationDto from './dto/bill-participants-confirmation.dto';
 import createPaymentDto from './dto/create-payment.dto';
+import paymentConfirmationDto from './dto/payment-confirmation.dto';
 
 @Controller('bills')
 export class BillsController {
@@ -103,5 +104,20 @@ export class BillsController {
     @Body() paymentDto: createPaymentDto,
   ) {
     return this.billsService.createPayment(billId, userId, paymentDto.claimId);
+  }
+
+  @Patch(':billId/participants/confirmPayments')
+  async setPaymentConfirmation(
+    @Param('billId') billId: string,
+    @Headers('userId') userId: string,
+    @Body() confirmationDto: paymentConfirmationDto,
+  ) {
+    await this.billsService.setBillParticipantPaymentConfirmation(
+      billId,
+      userId,
+      confirmationDto.paymentsConfirmed,
+    );
+
+    return 'Bill participant status succesfully updated.';
   }
 }
