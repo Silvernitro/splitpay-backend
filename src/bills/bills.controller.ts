@@ -24,9 +24,9 @@ export class BillsController {
 
   @Get(':groupId')
   async getBill(@Param('groupId') groupId: string) {
-    const bill = await this.billsService.getBill(groupId);
+    const bill = await this.billsService.getOpenBill(groupId);
     if (!bill) {
-      throw new NotFoundException('No open bill found for telegram group.');
+      throw new NotFoundException('No open bill found for the telegram group.');
     }
     return bill;
   }

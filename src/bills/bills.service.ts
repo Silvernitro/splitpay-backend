@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, Not, Repository } from 'typeorm';
 import { Bill, BillStatus } from './entities/bill.entity';
 import {
   BillParticipant,
@@ -15,16 +15,26 @@ export class BillsService {
   ) {}
 
   async createBill(telegramGroupId: string) {
+    if (await this.doesOpenBillExist(telegramGroupId)) {
+      throw new ConflictException(
+        'The telegram group already has an open bill.',
+      );
+    }
+
     const bill = new Bill();
     bill.telegramGroupId = telegramGroupId;
     return this.billRepository.save(bill);
   }
 
-  async getBill(telegramGroupId: string) {
+  async getOpenBill(telegramGroupId: string) {
     return this.billRepository.findOne({
       relations: { claims: { claimant: true } },
-      where: { telegramGroupId },
+      where: { telegramGroupId, status: Not(BillStatus.PAYMENTS_SETTLED) },
     });
+  }
+
+  private async doesOpenBillExist(telegramGroupId: string) {
+    return (await this.getOpenBill(telegramGroupId)) !== null;
   }
 
   async setBillParticipantsConfirmation(billId: string, isConfirmed: boolean) {
