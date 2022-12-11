@@ -2,6 +2,7 @@ import { Controller, Param, Post, Body } from '@nestjs/common';
 import { BillParticipantsService } from './bill-participants.service';
 import claimConfirmationDto from './dto/claim-confirmation.dto';
 import paymentConfirmationDto from './dto/payment-confirmation.dto';
+import { BillAndUserIdParams } from '../params/bill-user-id.params';
 
 @Controller()
 export class BillParticipantsController {
@@ -10,26 +11,22 @@ export class BillParticipantsController {
   ) {}
 
   @Post(':userId')
-  async addBillParticipant(
-    @Param('billId') billId: string,
-    @Param('userId') telegramUserId: string,
-  ) {
+  async addBillParticipant(@Param() params: BillAndUserIdParams) {
     await this.billParticipantsService.createBillParticipant(
-      billId,
-      telegramUserId,
+      params.billId,
+      params.userId,
     );
     return 'Bill participant successfully created';
   }
 
   @Post(':userId/confirmClaims')
   async setClaimConfirmation(
-    @Param('billId') billId: string,
-    @Param('userId') userId: string,
+    @Param() params: BillAndUserIdParams,
     @Body() confirmationDto: claimConfirmationDto,
   ) {
     await this.billParticipantsService.setBillParticipantClaimConfirmation(
-      billId,
-      userId,
+      params.billId,
+      params.userId,
       confirmationDto.claimsConfirmed,
     );
 
@@ -38,13 +35,12 @@ export class BillParticipantsController {
 
   @Post(':userId/confirmPayments')
   async setPaymentConfirmation(
-    @Param('billId') billId: string,
-    @Param('userId') userId: string,
+    @Param() params: BillAndUserIdParams,
     @Body() confirmationDto: paymentConfirmationDto,
   ) {
     await this.billParticipantsService.setBillParticipantPaymentConfirmation(
-      billId,
-      userId,
+      params.billId,
+      params.userId,
       confirmationDto.paymentsConfirmed,
     );
 

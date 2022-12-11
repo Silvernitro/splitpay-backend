@@ -9,6 +9,7 @@ import {
   Patch,
 } from '@nestjs/common';
 import { Response as Res } from 'express';
+import { BillIdParams } from 'src/params/bill-user-id.params';
 import { BillsService } from './bills.service';
 import billParticipantsConfirmationDto from './dto/bill-participants-confirmation.dto';
 
@@ -33,11 +34,11 @@ export class BillsController {
 
   @Patch(':billId/confirmParticipants')
   async setBillParticipantConfirmation(
-    @Param('billId') billId: string,
+    @Param() params: BillIdParams,
     @Body() confirmationDto: billParticipantsConfirmationDto,
   ) {
     await this.billsService.setBillParticipantsConfirmation(
-      billId,
+      params.billId,
       confirmationDto.participantsConfirmed,
     );
 

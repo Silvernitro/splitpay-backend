@@ -1,4 +1,5 @@
 import { Headers, Body, Controller, Param, Post } from '@nestjs/common';
+import { BillIdParams } from '../params/bill-user-id.params';
 import createPaymentDto from './dto/create-payment.dto';
 import { PaymentsService } from './payments.service';
 
@@ -8,12 +9,12 @@ export class PaymentsController {
 
   @Post()
   async createPayment(
-    @Param('billId') billId: string,
+    @Param() params: BillIdParams,
     @Headers('userId') userId: string,
     @Body() paymentDto: createPaymentDto,
   ) {
     return this.paymentsService.createPayment(
-      billId,
+      params.billId,
       userId,
       paymentDto.claimId,
     );
