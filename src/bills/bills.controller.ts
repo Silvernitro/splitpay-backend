@@ -9,7 +9,7 @@ import {
   Patch,
 } from '@nestjs/common';
 import { Response as Res } from 'express';
-import { BillIdParams } from 'src/params/bill-user-id.params';
+import { BillIdParams } from 'src/utils/params/bill-user-id.params';
 import { BillsService } from './bills.service';
 import billParticipantsConfirmationDto from './dto/bill-participants-confirmation.dto';
 

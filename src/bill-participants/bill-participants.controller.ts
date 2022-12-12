@@ -2,7 +2,7 @@ import { Controller, Param, Post, Body } from '@nestjs/common';
 import { BillParticipantsService } from './bill-participants.service';
 import claimConfirmationDto from './dto/claim-confirmation.dto';
 import paymentConfirmationDto from './dto/payment-confirmation.dto';
-import { BillAndUserIdParams } from '../params/bill-user-id.params';
+import { BillAndUserIdParams } from '../utils/params/bill-user-id.params';
 
 @Controller()
 export class BillParticipantsController {

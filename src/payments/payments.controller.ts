@@ -1,5 +1,5 @@
 import { Headers, Body, Controller, Param, Post } from '@nestjs/common';
-import { BillIdParams } from '../params/bill-user-id.params';
+import { BillIdParams } from '../utils/params/bill-user-id.params';
 import createPaymentDto from './dto/create-payment.dto';
 import { PaymentsService } from './payments.service';
 
