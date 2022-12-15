@@ -16,6 +16,9 @@ export class Claim {
   @ManyToOne('BillParticipant')
   claimant: BillParticipant;
 
+  @Column()
+  claimantId: string;
+
   @ManyToOne('Bill', 'claims')
   bill: Bill;
 

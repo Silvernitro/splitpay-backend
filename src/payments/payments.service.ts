@@ -29,4 +29,11 @@ export class PaymentsService {
 
     return this.paymentRepository.save(payment);
   }
+
+  async getPayments(billId: string) {
+    return this.paymentRepository.find({
+      where: { billId },
+      relations: { claim: true },
+    });
+  }
 }

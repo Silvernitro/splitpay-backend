@@ -36,4 +36,10 @@ export class ClaimsService {
 
     return this.claimRepository.save(claim);
   }
+
+  async getClaims(billId: string) {
+    return this.claimRepository.find({
+      where: { billId },
+    });
+  }
 }

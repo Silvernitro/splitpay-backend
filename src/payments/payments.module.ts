@@ -10,5 +10,6 @@ import { BillParticipantsModule } from 'src/bill-participants/bill-participants.
   imports: [TypeOrmModule.forFeature([Payment]), BillParticipantsModule],
   controllers: [PaymentsController],
   providers: [PaymentsService],
+  exports: [PaymentsService],
 })
 export class PaymentsModule {}

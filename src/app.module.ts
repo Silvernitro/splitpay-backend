@@ -12,6 +12,7 @@ import { Bill } from './bills/entities/bill.entity';
 import { BillParticipant } from './bill-participants/entities/bill-participant.entity';
 import { Claim } from './claims/entities/claim.entity';
 import { Payment } from './payments/entities/payment.entity';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
@@ -24,11 +25,13 @@ import { Payment } from './payments/entities/payment.entity';
       database: 'postgres',
       entities: [Bill, BillParticipant, Claim, Payment],
       synchronize: true,
+      // logging: true,
     }),
     BillsModule,
     BillParticipantsModule,
     ClaimsModule,
     PaymentsModule,
+    TransactionsModule,
     RouterModule.register([
       {
         path: 'bills',
@@ -45,6 +48,10 @@ import { Payment } from './payments/entities/payment.entity';
           {
             path: ':billId/payments',
             module: PaymentsModule,
+          },
+          {
+            path: ':billId/transactions',
+            module: TransactionsModule,
           },
         ],
       },

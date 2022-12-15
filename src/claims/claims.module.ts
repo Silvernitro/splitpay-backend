@@ -10,5 +10,6 @@ import { BillParticipantsModule } from 'src/bill-participants/bill-participants.
   imports: [TypeOrmModule.forFeature([Claim]), BillParticipantsModule],
   controllers: [ClaimsController],
   providers: [ClaimsService],
+  exports: [ClaimsService],
 })
 export class ClaimsModule {}

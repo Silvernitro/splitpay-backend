@@ -28,7 +28,7 @@ export class BillsService {
 
   async getOpenBill(telegramGroupId: string) {
     return this.billRepository.findOne({
-      relations: { claims: { claimant: true } },
+      relations: { claims: {}, payments: {} },
       where: { telegramGroupId, status: Not(BillStatus.PAYMENTS_SETTLED) },
     });
   }
