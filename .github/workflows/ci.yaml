@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, ci]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: 1234
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        run: npm run build
+
+      - name: Run Jest tests
+        run: npm run test
+
+      - name: Start app in background
+        run: npm run start:prod &
+
+      - name: Wait for server to be ready
+        uses: iFaxity/wait-on-action@v1
+        with:
+          resource: http://localhost:3000
+
+      - name: Run Postman e2e tests
+        uses: matt-ball/newman-action@master
+        with:
+          apiKey: ${{ secrets.postmanApiKey }}
+          collection: 11468810-f8a33e50-53c5-47a0-8db0-7c4d8d0b7c83

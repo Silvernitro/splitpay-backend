@@ -13,6 +13,7 @@ import { BillParticipant } from './bill-participants/entities/bill-participant.e
 import { Claim } from './claims/entities/claim.entity';
 import { Payment } from './payments/entities/payment.entity';
 import { TransactionsModule } from './transactions/transactions.module';
+import { HealthcheckModule } from './healthcheck/healthcheck.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { TransactionsModule } from './transactions/transactions.module';
       synchronize: true,
       // logging: true,
     }),
+    HealthcheckModule,
     BillsModule,
     BillParticipantsModule,
     ClaimsModule,
