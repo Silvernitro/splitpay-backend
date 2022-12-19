@@ -32,5 +32,18 @@ jobs:
       - name: Build app
         run: npm run build
 
-      - name: Start app
-        run: npm run start:prod
+      - name: Run Jest tests
+        run: npm run test
+
+      - name: Start app in background
+        run: npm run start:prod &
+
+      - name: Wait for app to spin up
+        uses: ifaxity/wait-on-action
+        with:
+          resource: http://localhost:3000
+
+      - uses: matt-ball/newman-action@master
+        with:
+          apiKey: ${{ secrets.postmanApiKey }}
+          collection: 11468810-f8a33e50-53c5-47a0-8db0-7c4d8d0b7c83
