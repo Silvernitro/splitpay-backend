@@ -1,4 +1,12 @@
-import { Headers, Body, Controller, Param, Post, Get } from '@nestjs/common';
+import {
+  Headers,
+  Body,
+  Controller,
+  Param,
+  Post,
+  Get,
+  ParseArrayPipe,
+} from '@nestjs/common';
 import { BillIdParams } from '../utils/params/bill-user-id.params';
 import createPaymentDto from './dto/create-payment.dto';
 import { PaymentsService } from './payments.service';
@@ -11,12 +19,13 @@ export class PaymentsController {
   async createPayment(
     @Param() params: BillIdParams,
     @Headers('userId') userId: string,
-    @Body() paymentDto: createPaymentDto,
+    @Body(new ParseArrayPipe({ items: createPaymentDto }))
+    paymentDtos: createPaymentDto[],
   ) {
     return this.paymentsService.createPayment(
       params.billId,
       userId,
-      paymentDto.claimId,
+      paymentDtos.map((payment) => payment.claimId),
     );
   }
 

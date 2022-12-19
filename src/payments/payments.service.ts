@@ -13,7 +13,11 @@ export class PaymentsService {
     private billParticipantsService: BillParticipantsService,
   ) {}
 
-  async createPayment(billId: string, telegramUserId: string, claimId: string) {
+  async createPayment(
+    billId: string,
+    telegramUserId: string,
+    claimIds: string[],
+  ) {
     const payer = await this.billParticipantsService.getBillParticipant(
       billId,
       telegramUserId,
@@ -22,12 +26,17 @@ export class PaymentsService {
       throw new BadRequestException("User doesn't exist in the given bill.");
     }
 
-    const payment = new Payment();
-    payment.billId = billId;
-    payment.payerId = payer.id;
-    payment.claimId = claimId;
+    const valuesToInsert = claimIds.map((claimId) => ({
+      claimId,
+      billId,
+      payerId: payer.id,
+    }));
 
-    return this.paymentRepository.save(payment);
+    return this.paymentRepository
+      .createQueryBuilder()
+      .insert()
+      .values(valuesToInsert)
+      .execute();
   }
 
   async getPayments(billId: string) {
