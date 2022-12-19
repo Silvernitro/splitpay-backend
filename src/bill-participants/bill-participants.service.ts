@@ -21,10 +21,15 @@ export class BillParticipantsService {
     billParticipant.telegramUserId = telegramUserId;
     billParticipant.billId = billId;
 
-    return this.billParticipantRepository.upsert(billParticipant, {
-      conflictPaths: ['telegramUserId', 'billId'],
-      skipUpdateIfNoValuesChanged: true,
-    });
+    const result = await this.billParticipantRepository.upsert(
+      billParticipant,
+      {
+        conflictPaths: ['telegramUserId', 'billId'],
+        skipUpdateIfNoValuesChanged: true,
+      },
+    );
+
+    return result.identifiers[0];
   }
 
   async getBillParticipant(billId: string, telegramUserId: string) {

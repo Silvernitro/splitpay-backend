@@ -12,11 +12,12 @@ export class BillParticipantsController {
 
   @Post(':userId')
   async addBillParticipant(@Param() params: BillAndUserIdParams) {
-    await this.billParticipantsService.createBillParticipant(
+    const id = await this.billParticipantsService.createBillParticipant(
       params.billId,
       params.userId,
     );
-    return 'Bill participant successfully created';
+
+    return { message: 'Bill participant successfully created.', data: id };
   }
 
   @Post(':userId/confirmClaims')
