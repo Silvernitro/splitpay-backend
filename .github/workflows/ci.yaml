@@ -38,11 +38,13 @@ jobs:
       - name: Start app in background
         run: npm run start:prod &
 
-      - uses: ifaxity/wait-on-action
+      - name: Wait for server to be ready
+        uses: iFaxity/wait-on-action@v1
         with:
           resource: http://localhost:3000
 
-      - uses: matt-ball/newman-action@master
+      - name: Run Postman e2e tests
+        uses: matt-ball/newman-action@master
         with:
           apiKey: ${{ secrets.postmanApiKey }}
           collection: 11468810-f8a33e50-53c5-47a0-8db0-7c4d8d0b7c83
