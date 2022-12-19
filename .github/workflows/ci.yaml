@@ -38,8 +38,7 @@ jobs:
       - name: Start app in background
         run: npm run start:prod &
 
-      - name: Wait for app to spin up
-        uses: ifaxity/wait-on-action
+      - uses: ifaxity/wait-on-action
         with:
           resource: http://localhost:3000
 
