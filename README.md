@@ -1,9 +1,10 @@
 # SplitPay
 
-<span>
-  <img src="https://github.com/devicons/devicon/blob/master/icons/nestjs/nestjs-plain.svg" width="45px" alt="nest" />
-  <img src="https://github.com/devicons/devicon/blob/master/icons/postgresql/postgresql-plain.svg" width="45px" alt="postgresql" />
-</span>
+Built with:
+<div>
+  <img src="https://github.com/devicons/devicon/blob/master/icons/nestjs/nestjs-plain.svg" width="35px" alt="nest" />
+  <img src="https://github.com/devicons/devicon/blob/master/icons/postgresql/postgresql-plain.svg" width="35px" alt="postgresql" />
+</div>
 
 Just the back-end of it here. SplitPay let's clients create bills that need to be
 split amongst friends. You create a bill, add people to it, have each person indicate
