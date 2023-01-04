@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 
 import { BillsModule } from './bills/bills.module';
@@ -14,9 +15,11 @@ import { Claim } from './claims/entities/claim.entity';
 import { Payment } from './payments/entities/payment.entity';
 import { TransactionsModule } from './transactions/transactions.module';
 import { HealthcheckModule } from './healthcheck/healthcheck.module';
+import { DbsModule } from './dbs/dbs.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -34,6 +37,7 @@ import { HealthcheckModule } from './healthcheck/healthcheck.module';
     ClaimsModule,
     PaymentsModule,
     TransactionsModule,
+    DbsModule,
     RouterModule.register([
       {
         path: 'bills',
