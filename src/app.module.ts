@@ -8,14 +8,15 @@ import { BillsModule } from './bills/bills.module';
 import { BillParticipantsModule } from './bill-participants/bill-participants.module';
 import { ClaimsModule } from './claims/claims.module';
 import { PaymentsModule } from './payments/payments.module';
+import { TransactionsModule } from './transactions/transactions.module';
+import { HealthcheckModule } from './healthcheck/healthcheck.module';
+import { DbsModule } from './dbs/dbs.module';
+import { TelegramModule } from './telegram/telegram.module';
 
 import { Bill } from './bills/entities/bill.entity';
 import { BillParticipant } from './bill-participants/entities/bill-participant.entity';
 import { Claim } from './claims/entities/claim.entity';
 import { Payment } from './payments/entities/payment.entity';
-import { TransactionsModule } from './transactions/transactions.module';
-import { HealthcheckModule } from './healthcheck/healthcheck.module';
-import { DbsModule } from './dbs/dbs.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { DbsModule } from './dbs/dbs.module';
     PaymentsModule,
     TransactionsModule,
     DbsModule,
+    TelegramModule,
     RouterModule.register([
       {
         path: 'bills',
