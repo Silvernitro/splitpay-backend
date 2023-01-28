@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 
 import { BillsModule } from './bills/bills.module';
@@ -21,16 +21,20 @@ import { Payment } from './payments/entities/payment.entity';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '1234',
-      database: 'postgres',
-      entities: [Bill, BillParticipant, Claim, Payment],
-      synchronize: true,
-      // logging: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('POSTGRES_HOST'),
+        port: configService.get<number>('POSTGRES_PORT'),
+        username: configService.get<string>('POSTGRES_USERNAME'),
+        password: configService.get<string>('POSTGRES_PW'),
+        database: configService.get<string>('POSTGRES_DB'),
+        entities: [Bill, BillParticipant, Claim, Payment],
+        synchronize: true,
+        // logging: true,
+      }),
+      inject: [ConfigService],
     }),
     HealthcheckModule,
     BillsModule,
