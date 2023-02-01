@@ -1,0 +1,21 @@
+name: Deploy
+on:
+  workflow_dispatch:
+  # Note that the CI workflow may run on other branches too but we only trigger a deployment on the 2 branches below
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [master, ci]
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+jobs:
+  deploy:
+    needs: run-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only

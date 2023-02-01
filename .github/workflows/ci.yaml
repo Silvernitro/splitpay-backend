@@ -3,7 +3,7 @@ name: CI
 on:
   workflow_dispatch:
   push:
-    branches: [master, ci]
+    branches: [master, dev, ci]
 
 jobs:
   run-tests:
@@ -37,11 +37,17 @@ jobs:
 
       - name: Start app in background
         run: npm run start:prod &
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USERNAME: postgres
+          POSTGRES_PW: 1234
+          POSTGRES_DB: postgres
 
       - name: Wait for server to be ready
         uses: iFaxity/wait-on-action@v1
         with:
-          resource: http://localhost:3000
+          resource: http://localhost:3001
 
       - name: Run Postman e2e tests
         uses: matt-ball/newman-action@master
