@@ -1,8 +1,10 @@
 name: Deploy
-
 on:
   workflow_dispatch:
-  push:
+  # Note that the CI workflow may run on other branches too but we only trigger a deployment on the 2 branches below
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
     branches: [master, ci]
 
 env:
